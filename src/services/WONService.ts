@@ -8,8 +8,8 @@ export default class WONService {
   private static readonly bit1Symbol = "#00FF00"; // Green
   private static readonly endSymbol = "#fff"; // Blue
   private static readonly guardSymbol = "#0000FF"; // Black
-  private static readonly borderSize = 30; // Band Guard Size in Pixels
-  private static readonly colorThrashold = 180; // Color Threshold for Rectangle Detection
+  private static readonly borderSize = 50; // Band Guard Size in Pixels
+  private static readonly colorThrashold = 150; // Color Threshold for Rectangle Detection
   public static demoRunning = false;
   public static moduRunning = false;
 
@@ -229,6 +229,8 @@ export default class WONService {
 
       const { rectangleColors } = WONService.detectRectangles(signal);
 
+      console.log("Rectangle Colors: ", rectangleColors);
+
       if (WONService.lostBitRecover && rectangleColors.length !== modulation) {
         const missingBits = modulation - rectangleColors.length;
         for (let i = 0; i < missingBits; i++) {
@@ -371,13 +373,13 @@ export default class WONService {
           data[index + 2],
         ]; // Obtém o valor RGB do pixel
 
-        // console.log("Pixel:", {
-        //   x,
-        //   y,
-        //   r: pixel[0],
-        //   g: pixel[1],
-        //   b: pixel[2],
-        // });
+        console.log("Pixel:", {
+          x,
+          y,
+          r: pixel[0],
+          g: pixel[1],
+          b: pixel[2],
+        });
 
         // Se encontrar um pixel escuro, avança para o próximo pixel
         if (
@@ -401,9 +403,11 @@ export default class WONService {
           continue; // Skip to next pixel if it's not red or green
         }
 
-        // console.log("Finding Vertical Border");
+        console.log("Trying Find Vertical Border");
+
         // Avançar o x para a direita até encontrar uma borda preta ou fim da linha.
         let currentIndex = (y * width + x) * 4;
+
         // Enquanto o pixel for colorido
         while (
           data[currentIndex] >= WONService.colorThrashold ||
@@ -457,7 +461,7 @@ export default class WONService {
 
         // Se x exceder a largura da imagem, reinicie x e avance y
         if (x >= width) {
-          // console.log("Finding Horizontal Border");
+          console.log("Finding Horizontal Border");
           x = 0; // Reinicia x
 
           // Avançar y até encontrar a borda inferior ou fim da imagem
@@ -486,13 +490,14 @@ export default class WONService {
               //   g: data[currentIndex + 1],
               //   b: data[currentIndex + 2],
               // });
+
               // Avança na borda até a próxima cor.
               while (
                 data[currentIndex] < WONService.colorThrashold &&
                 data[currentIndex + 1] < WONService.colorThrashold &&
                 data[currentIndex + 2] < WONService.colorThrashold
               ) {
-                // console.log("Horizontal Border Loop", { x, y });
+                console.log("Horizontal Border Loop", { x, y });
                 y++; // Move y para a próxima linha
                 currentIndex = (y * width + x) * 4;
 
@@ -619,16 +624,18 @@ export default class WONService {
 
     const threshold = WONService.colorThrashold; // Tolerância para considerar um valor próximo de zero
 
-    if (avgR > avgG && avgR > avgB) {
+    console.log("Center Color:", { avgR, avgG, avgB });
+
+    if (avgR > threshold && avgG > threshold && avgB > threshold) {
+      return "white";
+    } else if (avgR < threshold && avgG < threshold && avgB < threshold) {
+      return "black";
+    } else if (avgR > avgG && avgR > avgB) {
       return "red";
     } else if (avgG > avgR && avgG > avgB) {
       return "green";
     } else if (avgB > avgR && avgB > avgG) {
       return "blue";
-    } else if (avgR > 200 && avgG > 200 && avgB > 200) {
-      return "white";
-    } else if (avgR < threshold && avgG < threshold && avgB < threshold) {
-      return "black";
     }
 
     return null;
