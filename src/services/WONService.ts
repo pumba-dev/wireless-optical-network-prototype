@@ -8,7 +8,7 @@ export default class WONService {
   private static readonly bit1Symbol = "#00FF00"; // Green
   private static readonly endSymbol = "#fff"; // Blue
   private static readonly guardSymbol = "#0000FF"; // Black
-  private static readonly borderSize = 50; // Band Guard Size in Pixels
+  private static readonly borderSize = 35; // Band Guard Size in Pixels
   private static readonly colorThrashold = 150; // Color Threshold for Rectangle Detection
   public static demoRunning = false;
   public static moduRunning = false;
