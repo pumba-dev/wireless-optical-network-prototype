@@ -373,13 +373,13 @@ export default class WONService {
           data[index + 2],
         ]; // Obtém o valor RGB do pixel
 
-        console.log("Pixel:", {
-          x,
-          y,
-          r: pixel[0],
-          g: pixel[1],
-          b: pixel[2],
-        });
+        // console.log("Pixel:", {
+        //   x,
+        //   y,
+        //   r: pixel[0],
+        //   g: pixel[1],
+        //   b: pixel[2],
+        // });
 
         // Se encontrar um pixel escuro, avança para o próximo pixel
         if (
@@ -403,7 +403,7 @@ export default class WONService {
           continue; // Skip to next pixel if it's not red or green
         }
 
-        console.log("Trying Find Vertical Border");
+        // console.log("Trying Find Vertical Border");
 
         // Avançar o x para a direita até encontrar uma borda preta ou fim da linha.
         let currentIndex = (y * width + x) * 4;
@@ -461,7 +461,7 @@ export default class WONService {
 
         // Se x exceder a largura da imagem, reinicie x e avance y
         if (x >= width) {
-          console.log("Finding Horizontal Border");
+          // console.log("Finding Horizontal Border");
           x = 0; // Reinicia x
 
           // Avançar y até encontrar a borda inferior ou fim da imagem
@@ -497,7 +497,7 @@ export default class WONService {
                 data[currentIndex + 1] < WONService.colorThrashold &&
                 data[currentIndex + 2] < WONService.colorThrashold
               ) {
-                console.log("Horizontal Border Loop", { x, y });
+                // console.log("Horizontal Border Loop", { x, y });
                 y++; // Move y para a próxima linha
                 currentIndex = (y * width + x) * 4;
 
